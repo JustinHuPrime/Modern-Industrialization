@@ -65,7 +65,9 @@ public final class TranslationProvider implements DataProvider {
             translationPairs.put(key, englishValue);
         } else {
             throw new IllegalArgumentException(
-                    String.format("Error adding translation key %s for translation %s : already registered for translation %s", key, englishValue,
+                    String.format(
+                            "Error adding translation key %s for translation %s : already registered for translation %s",
+                            key, englishValue,
                             translationPairs.get(key)));
         }
     }
@@ -84,6 +86,7 @@ public final class TranslationProvider implements DataProvider {
         addTranslation("key.modern_industrialization.activate", "Toggle Flight");
         addTranslation("text.autoconfig.modern_industrialization.title", "Modern Industrialization Menu");
         addTranslation("tag.modern_industrialization.replicator_blacklist", "Replicator Blacklist");
+        addTranslation("text.modern_industrialization.electric_machines", "Electric Machines");
     }
 
     private void collectTranslationEntries() {
@@ -99,7 +102,8 @@ public final class TranslationProvider implements DataProvider {
         for (Field f : MIConfig.class.getFields()) {
             EnglishTranslation englishTranslation = f.getAnnotation(EnglishTranslation.class);
             if (englishTranslation != null) {
-                addTranslation("text.autoconfig.modern_industrialization.option." + f.getName(), englishTranslation.value());
+                addTranslation("text.autoconfig.modern_industrialization.option." + f.getName(),
+                        englishTranslation.value());
             }
         }
 
@@ -145,7 +149,8 @@ public final class TranslationProvider implements DataProvider {
         }
 
         // Inspect manual translations for other languages
-        Path manualTranslationsPath = packOutput.getOutputFolder().resolve("../../main/resources/assets/modern_industrialization/lang");
+        Path manualTranslationsPath = packOutput.getOutputFolder()
+                .resolve("../../main/resources/assets/modern_industrialization/lang");
         try (var paths = Files.walk(manualTranslationsPath, 1)) {
             paths.forEach(path -> {
                 try {
@@ -153,7 +158,8 @@ public final class TranslationProvider implements DataProvider {
                     if (lang.endsWith(".json")) {
                         lang = lang.substring(0, lang.length() - 5);
                         @SuppressWarnings("unchecked")
-                        TreeMap<String, String> manualTranslations = GSON.fromJson(Files.readString(path), TreeMap.class);
+                        TreeMap<String, String> manualTranslations = GSON.fromJson(Files.readString(path),
+                                TreeMap.class);
 
                         TreeMap<String, String> output = new TreeMap<>();
 
@@ -171,7 +177,8 @@ public final class TranslationProvider implements DataProvider {
                             }
                         }
 
-                        var savePath = packOutput.getOutputFolder().resolve("assets/modern_industrialization/lang/untranslated/" + lang + ".json");
+                        var savePath = packOutput.getOutputFolder()
+                                .resolve("assets/modern_industrialization/lang/untranslated/" + lang + ".json");
                         customJsonSave(cache, GSON.toJsonTree(output), savePath);
                     }
                 } catch (IOException e) {
@@ -184,7 +191,8 @@ public final class TranslationProvider implements DataProvider {
     private void customJsonSave(CachedOutput cache, JsonElement jsonElement, Path path) throws IOException {
         String sortedJson = GSON.toJson(jsonElement);
         String prettyPrinted = sortedJson.replace("\\u0027", "'");
-        cache.writeIfNeeded(path, prettyPrinted.getBytes(StandardCharsets.UTF_8), Hashing.sha1().hashString(prettyPrinted, StandardCharsets.UTF_8));
+        cache.writeIfNeeded(path, prettyPrinted.getBytes(StandardCharsets.UTF_8),
+                Hashing.sha1().hashString(prettyPrinted, StandardCharsets.UTF_8));
     }
 
     @Override
