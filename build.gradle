@@ -17,7 +17,7 @@ sourceCompatibility = JavaVersion.VERSION_17
 targetCompatibility = JavaVersion.VERSION_17
 
 repositories {
-    // for KJS
+    // for KJS, TIS-3D
     maven {
         url "https://www.cursemaven.com"
         content {
@@ -155,6 +155,13 @@ repositories {
             }
         }
     }
+    // For TIS-3D
+    maven {
+        url "https://raw.githubusercontent.com/Fuzss/modresources/main/maven/"
+        content {
+            includeGroup "fuzs.forgeconfigapiport"
+        }
+    }
     mavenLocal()
 
 }
@@ -257,6 +264,17 @@ dependencies {
     modImplementation("dev.ftb.mods:ftb-teams-fabric:${project.ftb_teams_version}") {
         exclude(group: "net.fabricmc.fabric-api")
         exclude(group: "me.shedaniel")
+    }
+
+    // TIS-3D
+    modImplementation("curse.maven:tis-3d-238603:${project.tis3d_version}") {
+        exclude(group: "net.fabricmc.fabric-api")
+    }
+    modApi("fuzs.forgeconfigapiport:forgeconfigapiport-fabric:${project.forge_config_api_port_version}") {
+        exclude(group: "net.fabricmc.fabric-api")
+    }
+    modImplementation("curse.maven:markdownmanual-502485:${project.markdown_manual_version}") {
+        exclude(group: "net.fabricmc.fabric-api")
     }
 }
 
