@@ -68,12 +68,15 @@ public class SteamCraftingMultiblockBlockEntity extends AbstractCraftingMultiblo
     private boolean steelTier;
 
     @Override
-    protected void onSuccessfulMatch(ShapeMatcher shapeMatcher) {
-        steelTier = false;
+    protected void onRematch(ShapeMatcher shapeMatcher) {
+        super.onRematch(shapeMatcher);
+        if (shapeMatcher.isMatchSuccessful()) {
+            steelTier = false;
 
-        for (HatchBlockEntity hatch : shapeMatcher.getMatchedHatches()) {
-            if (hatch.upgradesToSteel()) {
-                steelTier = true;
+            for (HatchBlockEntity hatch : shapeMatcher.getMatchedHatches()) {
+                if (hatch.upgradesToSteel()) {
+                    steelTier = true;
+                }
             }
         }
     }

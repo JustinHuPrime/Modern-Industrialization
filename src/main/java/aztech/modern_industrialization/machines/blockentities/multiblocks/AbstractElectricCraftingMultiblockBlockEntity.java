@@ -62,10 +62,13 @@ public abstract class AbstractElectricCraftingMultiblockBlockEntity extends Abst
     }
 
     @Override
-    protected void onSuccessfulMatch(ShapeMatcher shapeMatcher) {
-        energyInputs.clear();
-        for (HatchBlockEntity hatch : shapeMatcher.getMatchedHatches()) {
-            hatch.appendEnergyInputs(energyInputs);
+    protected void onRematch(ShapeMatcher shapeMatcher) {
+        super.onRematch(shapeMatcher);
+        if (shapeMatcher.isMatchSuccessful()) {
+            energyInputs.clear();
+            for (HatchBlockEntity hatch : shapeMatcher.getMatchedHatches()) {
+                hatch.appendEnergyInputs(energyInputs);
+            }
         }
     }
 

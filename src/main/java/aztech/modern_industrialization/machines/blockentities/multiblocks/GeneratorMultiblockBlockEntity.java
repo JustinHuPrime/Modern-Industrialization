@@ -40,7 +40,6 @@ import aztech.modern_industrialization.util.Tickable;
 import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.network.chat.Component;
-import org.jetbrains.annotations.Nullable;
 
 public class GeneratorMultiblockBlockEntity extends MultiblockMachineBlockEntity implements Tickable,
         EnergyListComponentHolder, MultiblockInventoryComponentHolder {
@@ -64,8 +63,6 @@ public class GeneratorMultiblockBlockEntity extends MultiblockMachineBlockEntity
         registerGuiComponent(new SlotPanel.Server(this).withRedstoneControl(redstoneControl));
     }
 
-    @Nullable
-    private ShapeMatcher shapeMatcher = null;
     private boolean allowNormalOperation = false;
 
     private final ActiveShapeComponent activeShape;
@@ -87,13 +84,6 @@ public class GeneratorMultiblockBlockEntity extends MultiblockMachineBlockEntity
     @Override
     public MultiblockInventoryComponent getMultiblockInventoryComponent() {
         return inventory;
-    }
-
-    protected void onSuccessfulMatch(ShapeMatcher shapeMatcher) {
-        energyOutputs.clear();
-        for (HatchBlockEntity hatch : shapeMatcher.getMatchedHatches()) {
-            hatch.appendEnergyOutputs(energyOutputs);
-        }
     }
 
     @Override
@@ -141,36 +131,17 @@ public class GeneratorMultiblockBlockEntity extends MultiblockMachineBlockEntity
         return inserted;
     }
 
-    protected final void link() {
-        if (shapeMatcher == null) {
-            shapeMatcher = new ShapeMatcher(level, worldPosition, orientation.facingDirection, getActiveShape());
-            shapeMatcher.registerListeners(level);
-        }
-        if (shapeMatcher.needsRematch()) {
-            allowNormalOperation = false;
-            shapeValid.shapeValid = false;
-            shapeMatcher.rematch(level);
-
-            if (shapeMatcher.isMatchSuccessful()) {
-                inventory.rebuild(shapeMatcher);
-
-                onSuccessfulMatch(shapeMatcher);
-                shapeValid.shapeValid = true;
-                allowNormalOperation = true;
-            }
-
-            if (shapeValid.update()) {
-                sync(false);
-            }
-        }
-    }
-
     @Override
-    public final void unlink() {
-        if (shapeMatcher != null) {
-            shapeMatcher.unlinkHatches();
-            shapeMatcher.unregisterListeners(level);
-            shapeMatcher = null;
+    protected void onRematch(ShapeMatcher shapeMatcher) {
+        allowNormalOperation = false;
+        if (shapeMatcher.isMatchSuccessful()) {
+            inventory.rebuild(shapeMatcher);
+            allowNormalOperation = true;
+
+            energyOutputs.clear();
+            for (HatchBlockEntity hatch : shapeMatcher.getMatchedHatches()) {
+                hatch.appendEnergyOutputs(energyOutputs);
+            }
         }
     }
 
