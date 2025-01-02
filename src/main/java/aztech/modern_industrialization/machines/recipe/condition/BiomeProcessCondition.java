@@ -39,6 +39,8 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.biome.Biome;
 import net.neoforged.neoforge.common.util.NeoForgeExtraCodecs;
 
@@ -80,6 +82,11 @@ public record BiomeProcessCondition(Either<ResourceKey<Biome>, TagKey<Biome>> bi
 
             list.add(MIText.RequiresBiome.text(biomeNames));
         });
+    }
+
+    @Override
+    public ItemStack icon() {
+        return Items.OAK_SAPLING.getDefaultInstance();
     }
 
     @Override
