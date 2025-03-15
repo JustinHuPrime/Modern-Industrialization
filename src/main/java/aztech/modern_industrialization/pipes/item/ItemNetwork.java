@@ -278,6 +278,9 @@ public class ItemNetwork extends PipeNetwork {
         int moved = 0;
 
         for (InsertTarget target : targets) {
+            if (source.connection() == target.connection()) {
+                continue;
+            }
             var stack = source.storage().getStackInSlot(sourceSlot);
             if (stack.isEmpty()) {
                 break;
