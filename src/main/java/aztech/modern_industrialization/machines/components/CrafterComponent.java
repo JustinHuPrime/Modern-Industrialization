@@ -106,6 +106,9 @@ public class CrafterComponent implements IComponent.ServerOnly, CrafterAccess {
             return false;
         }
 
+        default void onCraft() {
+        }
+
         // can't use getWorld() or the remapping will fail
         ServerLevel getCrafterWorld();
 
@@ -240,6 +243,7 @@ public class CrafterComponent implements IComponent.ServerOnly, CrafterAccess {
                     clearLocks();
                     usedEnergy = 0;
                     finishedRecipe = true;
+                    behavior.onCraft();
                 }
             } else if (behavior.isOverdriving()) {
                 eu = activeRecipe.value().conditionsMatch(conditionContext) ? behavior.consumeEu(recipeMaxEu, ACT) : 0;
