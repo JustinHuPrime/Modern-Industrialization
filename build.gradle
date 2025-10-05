@@ -360,7 +360,7 @@ publishMods {
     version = project.version
     changelog = changelogContents
     type = ReleaseType.of(releaseChannel)
-    displayName = "Modern Industrialization v${version}"
+    displayName = "Modern Industrialization v${project.version}"
     modLoaders = ["neoforge"]
 
     def shared = { platform ->
