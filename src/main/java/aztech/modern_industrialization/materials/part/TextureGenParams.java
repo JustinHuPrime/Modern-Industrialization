@@ -27,6 +27,7 @@ package aztech.modern_industrialization.materials.part;
 import aztech.modern_industrialization.materials.set.MaterialBlockSet;
 import aztech.modern_industrialization.materials.set.MaterialOreSet;
 import aztech.modern_industrialization.materials.set.MaterialRawSet;
+import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.Nullable;
 
 public sealed interface TextureGenParams {
@@ -54,7 +55,7 @@ public sealed interface TextureGenParams {
     record HotIngot() implements TextureGenParams {
     }
 
-    record Ore(boolean deepslate, MaterialOreSet oreSet) implements TextureGenParams {
+    record Ore(ResourceLocation stoneType, MaterialOreSet oreSet) implements TextureGenParams {
     }
 
     record RawMetal(boolean isBlock, MaterialRawSet rawSet) implements TextureGenParams {

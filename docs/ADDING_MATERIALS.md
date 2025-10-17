@@ -34,19 +34,20 @@ MIMaterialEvents.addMaterials(event => {
             .pipeCasing(8.0) // add a pipe casing, only blast resistance can be specified
             .battery(5000000) // add a battery with 5M EU capacity for the Portable Storage Unit
             .ore({
-                "generate": true, // does the ore generate in the world
                 "ore_set": "copper", // texture set, same principle as for blocks (found in "textures/materialsets/ores")
+                "generate": true, // does the ore generate in the world? (default: true)
+                // these generation parameters are only required if generate is true
                 "vein_size": 8, // the vein size
                 "veins_per_chunk": 8, // the number of veins per chunk
                 "max_y": 64, // the maximum y level
-                // the generation parameters are only required if generate is true
+                "biome_tag": "minecraft:is_overworld", // which biome(s) the ore should generate in. (default: "minecraft:is_overworld")
                 /*
+                 max and min xp dropped by the ore, default is 0 for both. Must be zero if the ore drops raw ores
                 "min_xp" : 0
                 "max_xp" : 0
-                 max and min xp dropped by the ore, default is 0 for both. Must be zero if the ore drop raw ores
                  */
-            }) // }, true) a second boolean optional parameter can be passed to only add the deepslate or if true or normal ore if false
-            // default is to add both
+            }) // }, "minecraft:tuff") a second optional string parameter can be passed to dictate what stone type the ore is made of.
+            // default behavior will create stone and deepslate ores
             .rawMetal("copper") // add a raw metal with the "copper" texture (found in "textures/materialsets/raw"), same principle as for blocks
             // as for ore, a second boolean optional parameter can be passed to only add the raw ore block if true or the raw ore item if false
             // default is to add both, equivalent to .rawMetal("copper", true).rawMetal("copper", false)

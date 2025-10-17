@@ -85,7 +85,7 @@ class PartTextureGenerator {
         } else if (params instanceof TextureGenParams.HotIngot) {
             processHotIngot();
         } else if (params instanceof TextureGenParams.Ore ore) {
-            processOre(ore.deepslate(), ore.oreSet());
+            processOre(ore.stoneType(), ore.oreSet());
         } else if (params instanceof TextureGenParams.RawMetal rawMetal) {
             processRawMetal(rawMetal.isBlock(), rawMetal.rawSet());
         } else if (params instanceof TextureGenParams.SimpleRecoloredBlock) {
@@ -155,21 +155,29 @@ class PartTextureGenerator {
                 material.get(SET).name, itemPath, false, new HotIngotColoramp(coloramp, 0.1, 0.5));
     }
 
-    private void processOre(boolean deepslate, MaterialOreSet oreSet) throws IOException {
+    private void processOre(ResourceLocation stoneType, MaterialOreSet oreSet) throws IOException {
         String template = String.format("modern_industrialization:textures/materialsets/ores/%s.png", oreSet.name);
-        String from = switch (oreSet) {
-        case IRON -> deepslate ? "deepslate_iron_ore" : "iron_ore";
-        case COPPER -> deepslate ? "deepslate_copper_ore" : "copper_ore";
-        case LAPIS -> deepslate ? "deepslate_lapis_ore" : "lapis_ore";
-        case REDSTONE -> deepslate ? "deepslate" : "redstone_ore";
-        case DIAMOND -> deepslate ? "deepslate" : "diamond_ore";
-        case GOLD -> deepslate ? "deepslate_gold_ore" : "gold_ore";
-        case EMERALD -> deepslate ? "deepslate_emerald_ore" : "emerald_ore";
-        case COAL -> deepslate ? "deepslate_coal_ore" : "coal_ore";
-        default -> deepslate ? "deepslate" : "stone";
-        };
+        ResourceLocation from;
+        boolean deepslate = stoneType.equals(OrePart.TYPE_DEEPSLATE);
+        if (stoneType.equals(OrePart.TYPE_STONE) || deepslate) {
+            from = ResourceLocation.withDefaultNamespace(switch (oreSet) {
+            case IRON -> deepslate ? "deepslate_iron_ore" : "iron_ore";
+            case COPPER -> deepslate ? "deepslate_copper_ore" : "copper_ore";
+            case LAPIS -> deepslate ? "deepslate_lapis_ore" : "lapis_ore";
+            case REDSTONE -> deepslate ? "deepslate" : "redstone_ore";
+            case DIAMOND -> deepslate ? "deepslate" : "diamond_ore";
+            case GOLD -> deepslate ? "deepslate_gold_ore" : "gold_ore";
+            case EMERALD -> deepslate ? "deepslate_emerald_ore" : "emerald_ore";
+            case COAL -> deepslate ? "deepslate_coal_ore" : "coal_ore";
+            default -> deepslate ? "deepslate" : "stone";
+            });
+        } else {
+            // Ore textures don't exist for any blocks other than stone or deepslate,
+            // so if the source block is something else then just pull from the block's usual texture.
+            from = stoneType;
+        }
 
-        try (NativeImage image = mtm.getAssetAsTexture(String.format("minecraft:textures/block/%s.png", from));
+        try (NativeImage image = mtm.getAssetAsTexture(String.format("%s:textures/block/%s.png", from.getNamespace(), from.getPath()));
                 NativeImage top = mtm.getAssetAsTexture(template)) {
 
             TextureHelper.colorize(top, coloramp);

@@ -28,6 +28,7 @@ import aztech.modern_industrialization.materials.MaterialBuilder;
 import aztech.modern_industrialization.materials.MaterialRegistry;
 import aztech.modern_industrialization.materials.part.MaterialItemPart;
 import aztech.modern_industrialization.materials.part.NuclearFuelPart;
+import aztech.modern_industrialization.materials.part.OrePart;
 import aztech.modern_industrialization.materials.part.PartKey;
 import aztech.modern_industrialization.materials.property.MaterialHardness;
 import aztech.modern_industrialization.materials.property.MaterialProperty;
@@ -38,6 +39,7 @@ import aztech.modern_industrialization.materials.set.MaterialSet;
 import aztech.modern_industrialization.nuclear.IsotopeFuelParams;
 import aztech.modern_industrialization.nuclear.NuclearConstant;
 import com.google.gson.JsonObject;
+import net.minecraft.resources.ResourceLocation;
 
 public class MaterialBuilderJSWrapper {
 
@@ -144,14 +146,14 @@ public class MaterialBuilderJSWrapper {
         return this;
     }
 
-    public MaterialBuilderJSWrapper ore(JsonObject json, boolean deepslate) {
-        materialBuilder.addParts(creator.orePart(json, deepslate));
+    public MaterialBuilderJSWrapper ore(JsonObject json, ResourceLocation stoneType) {
+        materialBuilder.addParts(creator.orePart(json, stoneType));
         return this;
     }
 
     public MaterialBuilderJSWrapper ore(JsonObject json) {
-        materialBuilder.addParts(creator.orePart(json, true));
-        materialBuilder.addParts(creator.orePart(json, false));
+        materialBuilder.addParts(creator.orePart(json, OrePart.TYPE_DEEPSLATE));
+        materialBuilder.addParts(creator.orePart(json, OrePart.TYPE_STONE));
         return this;
     }
 
